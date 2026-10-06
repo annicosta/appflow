@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StudyFlow — Organize seus estudos</title>
+  <meta name="description" content="StudyFlow: tarefas, provas e trabalhos em um cronograma de estudos personalizado.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Pular para o conteúdo</a>
+  <div class="app">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 40 40" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="currentColor"/>
+          <path d="M9 26c5-9 9 3 14-5s6-6 8-6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="31" cy="15" r="3" fill="#ffb37a"/>
+        </svg>
+        <span>Study<b>Flow</b></span>
+      </div>
+      <nav>
+        <ul class="nav">
+          <li><button class="nav-btn" data-view="inicio" aria-label="Início"><span class="ic" aria-hidden="true">⌂</span><span class="lbl">Início</span></button></li>
+          <li><button class="nav-btn" data-view="atividades" aria-label="Atividades"><span class="ic" aria-hidden="true">☰</span><span class="lbl">Atividades</span></button></li>
+          <li><button class="nav-btn" data-view="cronograma" aria-label="Meu cronograma"><span class="ic" aria-hidden="true">◷</span><span class="lbl">Cronograma</span></button></li>
+          <li><button class="nav-btn" data-view="progresso" aria-label="Progresso"><span class="ic" aria-hidden="true">↗</span><span class="lbl">Progresso</span></button></li>
+        </ul>
+      </nav>
+      <p class="side-foot">Seus dados ficam salvos neste navegador.</p>
+    </aside>
+
+    <main id="main" tabindex="-1">
+      <!-- INÍCIO -->
+      <section class="view" id="view-inicio" aria-labelledby="t-inicio">
+        <header class="page-head">
+          <div>
+            <h1 id="t-inicio">Olá, Ana! 👋</h1>
+            <p class="sub">Vamos organizar seus estudos?</p>
+          </div>
+          <button class="btn primary" data-action="nova">+ Nova atividade</button>
+        </header>
+        <div class="stats" id="home-stats"></div>
+        <div class="card week-card">
+          <div class="row-between"><h2>Progresso semanal</h2><span id="home-week-pct" class="muted"></span></div>
+          <div class="bar" role="progressbar" aria-label="Progresso semanal" id="home-week-bar" aria-valuemin="0" aria-valuemax="100"><span></span></div>
+        </div>
+        <div class="grid2">
+          <section class="card" aria-labelledby="t-hoje">
+            <h2 id="t-hoje">Hoje</h2>
+            <div id="home-today"></div>
+          </section>
+          <section class="card" aria-labelledby="t-prox">
+            <h2 id="t-prox">Próximas atividades</h2>
+            <div id="home-next"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ATIVIDADES -->
+      <section class="view" id="view-atividades" aria-labelledby="t-ativ" hidden>
+        <header class="page-head">
+          <div><h1 id="t-ativ">Atividades</h1><p class="sub">Tudo o que você precisa entregar ou estudar.</p></div>
+          <button class="btn primary" data-action="nova">+ Nova atividade</button>
+        </header>
+        <div class="filters" role="group" aria-label="Filtrar atividades" id="filters">
+          <button class="chip" data-filter="todas" aria-pressed="true">Todas</button>
+          <button class="chip" data-filter="tarefa" aria-pressed="false">Tarefas</button>
+          <button class="chip" data-filter="prova" aria-pressed="false">Provas</button>
+          <button class="chip" data-filter="trabalho" aria-pressed="false">Trabalhos</button>
+          <button class="chip" data-filter="pendente" aria-pressed="false">Pendentes</button>
+          <button class="chip" data-filter="concluida" aria-pressed="false">Concluídas</button>
+        </div>
+        <ul class="list" id="activity-list"></ul>
+      </section>
+
+      <!-- CRONOGRAMA -->
+      <section class="view" id="view-cronograma" aria-labelledby="t-cron" hidden>
+        <header class="page-head">
+          <div><h1 id="t-cron">Meu cronograma</h1><p class="sub">Diga quanto tempo você tem e o StudyFlow monta seu plano.</p></div>
+        </header>
+        <form class="card" id="avail-form" novalidate>
+          <h2>Disponibilidade semanal</h2>
+          <p class="muted small">Use horas e minutos. Deixe 0 para dia de descanso.</p>
+          <div class="avail-grid" id="avail-grid"></div>
+          <div class="row-end">
+            <button type="submit" class="btn primary">Gerar meu cronograma</button>
+          </div>
+        </form>
+        <div id="schedule-alert"></div>
+        <div id="schedule"></div>
+      </section>
+
+      <!-- PROGRESSO -->
+      <section class="view" id="view-progresso" aria-labelledby="t-prog" hidden>
+        <header class="page-head">
+          <div><h1 id="t-prog">Seu progresso esta semana</h1><p class="sub" id="prog-msg"></p></div>
+        </header>
+        <div class="card hero-prog">
+          <div class="ring" id="prog-ring"><span id="prog-pct"></span></div>
+          <div><h2>Atividades concluídas</h2><p class="muted" id="prog-ring-txt"></p></div>
+        </div>
+        <div class="stats" id="prog-stats"></div>
+        <div class="grid2">
+          <section class="card" aria-labelledby="t-semana"><h2 id="t-semana">Minutos estudados por dia</h2><div class="week-bars" id="prog-week"></div></section>
+          <section class="card" aria-labelledby="t-mat"><h2 id="t-mat">Progresso por matéria</h2><div id="prog-subjects"></div></section>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navegação inferior">
+      <button class="nav-btn" data-view="inicio"><span class="ic" aria-hidden="true">⌂</span>Início</button>
+      <button class="nav-btn" data-view="atividades"><span class="ic" aria-hidden="true">☰</span>Atividades</button>
+      <button class="nav-btn" data-view="cronograma"><span class="ic" aria-hidden="true">◷</span>Cronograma</button>
+      <button class="nav-btn" data-view="progresso"><span class="ic" aria-hidden="true">↗</span>Progresso</button>
+    </nav>
+  </div>
+
+  <!-- Modal nova atividade -->
+  <dialog id="form-dialog" aria-labelledby="t-form">
+    <form id="activity-form" novalidate>
+      <h2 id="t-form">Nova atividade</h2>
+      <div class="field"><label for="f-titulo">Título</label><input id="f-titulo" name="titulo" maxlength="80" aria-describedby="e-titulo"><small class="err" id="e-titulo"></small></div>
+      <div class="field"><label for="f-materia">Matéria</label><input id="f-materia" name="materia" list="materias" maxlength="40" aria-describedby="e-materia"><small class="err" id="e-materia"></small>
+        <datalist id="materias"><option>Matemática</option><option>Português</option><option>Biologia</option><option>Química</option><option>Física</option><option>História</option><option>Geografia</option><option>Inglês</option><option>Filosofia</option><option>Sociologia</option></datalist></div>
+      <div class="two">
+        <div class="field"><label for="f-tipo">Tipo</label><select id="f-tipo" name="tipo" aria-describedby="e-tipo"><option value="">Selecione</option><option value="tarefa">Tarefa</option><option value="prova">Prova</option><option value="trabalho">Trabalho</option></select><small class="err" id="e-tipo"></small></div>
+        <div class="field"><label for="f-prazo">Data / prazo</label><input type="date" id="f-prazo" name="prazo" aria-describedby="e-prazo"><small class="err" id="e-prazo"></small></div>
+      </div>
+      <div class="two">
+        <div class="field"><label for="f-prioridade">Prioridade</label><select id="f-prioridade" name="prioridade" aria-describedby="e-prioridade"><option value="">Selecione</option><option value="baixa">Baixa</option><option value="media">Média</option><option value="alta">Alta</option></select><small class="err" id="e-prioridade"></small></div>
+        <div class="field"><label for="f-dificuldade">Dificuldade</label><select id="f-dificuldade" name="dificuldade" aria-describedby="e-dificuldade"><option value="">Selecione</option><option value="facil">Fácil</option><option value="media">Média</option><option value="dificil">Difícil</option></select><small class="err" id="e-dificuldade"></small></div>
+      </div>
+      <div class="field"><label for="f-tempo">Tempo estimado (minutos)</label><input type="number" id="f-tempo" name="tempoEstimado" min="10" max="1200" step="5" aria-describedby="e-tempo"><small class="err" id="e-tempo"></small></div>
+      <div class="row-end">
+        <button type="button" class="btn ghost" data-action="fechar">Cancelar</button>
+        <button type="submit" class="btn primary">Salvar atividade</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal detalhes -->
+  <dialog id="detail-dialog" aria-labelledby="t-detail"><div id="detail-body"></div></dialog>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
